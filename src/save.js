@@ -50,3 +50,18 @@ var App = React.createClass({
         })
       }
     },
+
+    var latest = movieData.sort(this.movieCompareByReleased)
+    var alpha = movieData.sort(this.movieCompareByTitle)
+    var map = theatres.sort()
+
+    if (view.currentView === 'latest'){
+      this.setState({
+      movies: latest
+      })
+    } else if (view.currentView === 'alpha'){
+      this.setState({
+      movies: alpha
+      })
+    }
+      }

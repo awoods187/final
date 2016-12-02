@@ -10,7 +10,7 @@ var {Gmaps, Marker} = ReactGMaps
 var TheatreMap = require('./moviemap')
 var movieData = require('./movies.json')
 var theatres = require('./theatres.json')
-
+var NavBar = require('./NavBar')
 // There should really be some JSON-formatted data in movies.json, instead of an empty array.
 // I started writing this command to extract the data from the learn-sql workspace
 // on C9, but it's not done yet :) You must have the csvtojson command installed for this to work.
@@ -170,13 +170,22 @@ var App = React.createClass({
     // sorted A-Z), or "map" (the data visualized)
     // We should probably do the sorting and setting of movies in state here.
     // You should really look at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-    var latest = movieData.sort(this.movieCompareByReleased)
-    var alpha = movieData.sort(this.movieCompareByTitle)
-    var map = theatres.sort()
-
-    this.setState({
-    currentView: view
-    })
+    if (view === 'latest'){
+      this.setState({
+      movies: this.state.movies.sort(this.movieCompareByReleased),
+      currentView: view
+      })
+    } else if (view === 'alpha'){
+      this.setState({
+      movies: this.state.movies.sort(this.movieCompareByTitle),
+      currentView: view
+      })
+    }
+    else if (view === 'map'){
+      this.setState({
+      currentView: view
+      })
+    }
   },
   renderMovieDetails: function() {
     if (this.state.currentMovie == null) {
@@ -219,7 +228,8 @@ var App = React.createClass({
   getInitialState: function() {
     return {
       movies: movieData.sort(this.movieCompareByReleased),
-      currentMovie: null
+      currentMovie: null,
+      currentView: "latest"
     }
   },
   componentDidMount: function() {
@@ -233,7 +243,7 @@ var App = React.createClass({
     return (
       <div>
         <Header currentUser={this.state.currentUser} />
-        <SortBar movieCount={this.state.movies.length} viewChanged={this.viewChanged} />
+        <NavBar movieCount={this.state.movies.length} currentView={this.state.currentView} viewChanged={this.viewChanged} />
         <div className="main row">
           {this.renderMainSection()}
         </div>
